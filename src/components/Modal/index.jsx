@@ -1,17 +1,17 @@
 import { Modal, Button } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleModal } from '../../redux/actions';
 
-export default ({ advice, reload }) => {
-  const showModal = useSelector((state) => state.showModal.isOpen);
-  const dispatch = useDispatch();
+import { useContext } from 'react';
+import { AdviceContext } from '../../context/AdviceContext';
+
+export default ({ isOpen, onClose }) => {
+  const value = useContext(AdviceContext);
+  const [dataAPI, setDataAPI, reloadAdvice, setReloadAdvice] = value;
 
   return (
     <Modal
-      show={showModal}
+      show={isOpen}
       onHide={() => {
-        dispatch(toggleModal());
-        reload();
+        onClose(false);
       }}
     >
       <Modal.Header closeButton>
@@ -19,12 +19,12 @@ export default ({ advice, reload }) => {
           Mr Advice
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ textAlign: 'center' }}>{advice}</Modal.Body>
+      <Modal.Body style={{ textAlign: 'center' }}>{dataAPI}</Modal.Body>
       <Modal.Footer>
         <Button
           variant="warning"
           onClick={() => {
-            dispatch(toggleModal());
+            onClose(false);
           }}
         >
           Close
@@ -32,7 +32,7 @@ export default ({ advice, reload }) => {
         <Button
           variant="info"
           onClick={() => {
-            reload();
+            setReloadAdvice(!reloadAdvice);
           }}
         >
           Reload
